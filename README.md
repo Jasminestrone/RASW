@@ -2,7 +2,7 @@
 Math for 2D inverse kinematics
 
 The elbow angle is found using the law of cosines where we do
-![equation](https://latex.codecogs.com/svg.image?\cos(\theta_2)=\frac{L_1^2&plus;L_2^2-D^2}{2L_1L_2})
+$$\cos(\theta_2) = \frac{L_1^2 + L_2^2 - D^2}{2L_1L_2}$$
 Then we can find the elbow angle using the equation
 theta2 = cos^-1(cos(theta2))
 This outputs the angle that the elbow arm needs to be at (where 0 degrees is fully extended
