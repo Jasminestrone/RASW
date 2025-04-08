@@ -1,2 +1,3 @@
 # RASW
-Robot arm software package
+
+Simple robotic arm managment software package :)
