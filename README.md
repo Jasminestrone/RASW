@@ -18,4 +18,4 @@ Finally we get theta1 by subtracting alpha from the target angle:
     $$\theta_1 = \alpha - \beta$$
 
 We convert these angles from radians to degrees by doing:
-    $$\theta_1_{degs} = \theta_1 \cdot \frac{180}{\pi} \text{and} \theta_2_{degs} = \theta_2 \cdot \frac{180}{\pi}$$
+    $$\theta_1_{degs} = \theta_1 \cdot \frac{180}{\pi}$$ and $$\theta_2_{degs} = \theta_2 \cdot \frac{180}{\pi}$$
