@@ -4,13 +4,13 @@ import math
 
 point_x = 5
 point_y = 2
-l1 = 5
-l2 = 5
-l3 = 5
+l1 = 160
+l2 = 160
+l3 = 160
 l4 = 5
-l1_angle = math.radians(20)
-l2_angle = math.radians(20)
-l3_angle = math.radians(20)
+l1_angle = math.radians(40)
+l2_angle = math.radians(-35)
+l3_angle = math.radians(73)
 l4_angle = math.radians(20)
 
 
