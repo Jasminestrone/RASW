@@ -50,8 +50,6 @@ We convert these angles from radians to degrees by doing:
 
 <h3>Math for 2D forward kinematics</h3>
 
-# Forward Kinematics Calculation
-
 The forward kinematics calculation starts with the initial arm segments at the origin pointing along the x-axis, then applies sequential rotations to find each joint position.
 
 For each arm segment (L1, L2, L3, L4), we:
@@ -59,8 +57,12 @@ For each arm segment (L1, L2, L3, L4), we:
   $$\{arm_vector} = [L_i, 0]$$
 
 - Apply rotation matrices to transform each link vector:
-  $$R(\theta) = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}$$
-
+$$
+R(\theta) = \begin{bmatrix}
+\cos(\theta) & -\sin(\theta) \\
+\sin(\theta) & \cos(\theta)
+\end{bmatrix}
+$$
 For each joint, the rotation angle is cumulative from previous joints:
 - First joint rotates by $\theta_1$ = l1_angle
 - Second joint rotates by $\theta_2$ = l1_angle + l2_angle
