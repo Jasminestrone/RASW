@@ -50,5 +50,34 @@ We convert these angles from radians to degrees by doing:
 
 <h3>Math for 2D forward kinematics</h3>
 
-| Math |
+The forward kinematics calculation starts with the initial arm segments at the origin pointing along the x-axis, then applies sequential rotations to find each joint position.
+For each arm segment (L1, L2, L3, L4), we:
+
+Begin with a vector along the x-axis with magnitude equal to the link length:
+
+ $$\text{arm\_vector} = [L_i, 0]$$
+
+Apply rotation matrices to transform each link vector:
+
+ $$R(\theta) = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}$$
+
+For each joint, the rotation angle is cumulative from previous joints:
+
+First joint rotates by $\theta_1$ = l1_angle
+Second joint rotates by $\theta_2$ = l1_angle + l2_angle
+Third joint rotates by $\theta_3$ = l1_angle + l2_angle + l3_angle
+Fourth joint rotates by $\theta_4$ = l1_angle + l2_angle + l3_angle + l4_angle
+
+
+Each joint position is calculated by adding the rotated vector to the previous joint:
+
+ $$\text{joint\_i\_pos} = \text{joint\_(i-1)\_pos} + R(\theta_{cum}) \cdot \text{arm\_i\_vect}$$
+
+This process is repeated sequentially until we reach the end effector position, which is the position after the last arm segment.
+
+The rotation function rotate_vector(vector, angle) multiplies the vector by the rotation matrix to produce a new vector rotated by the specified angle:
+
+ $$\text{rotated\_vector} = R(\theta) \cdot \text{vector}$$
+
+
 </details>
