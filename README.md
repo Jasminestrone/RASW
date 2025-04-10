@@ -50,8 +50,6 @@ We convert these angles from radians to degrees by doing:
 
 <h3>Math for 2D forward kinematics</h3>
 
-# Forward Kinematics Calculation
-
 The forward kinematics calculation starts with the initial arm segments at the origin pointing along the x-axis, then applies sequential rotations to find each joint position.
 
 For each arm segment (L1, L2, L3, L4), we:
