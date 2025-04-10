@@ -56,7 +56,7 @@ The forward kinematics calculation starts with the initial arm segments at the o
 
 For each arm segment (L1, L2, L3, L4), we:
 - Begin with a vector along the x-axis with magnitude equal to the link length:
-  $$\text{arm\_vector} = [L_i, 0]$$
+  $$\{arm_vector} = [L_i, 0]$$
 
 - Apply rotation matrices to transform each link vector:
   $$R(\theta) = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}$$
@@ -68,12 +68,12 @@ For each joint, the rotation angle is cumulative from previous joints:
 - Fourth joint rotates by $\theta_4$ = l1_angle + l2_angle + l3_angle + l4_angle
 
 Each joint position is calculated by adding the rotated vector to the previous joint:
-  $$\text{joint\_i\_pos} = \text{joint\_(i-1)\_pos} + R(\theta_{\text{cum}}) \cdot \text{arm\_i\_vect}$$
+  $${joint_i_pos} = {joint_(i-1)_pos} + R(\theta_{\text{cum}}) \cdot {arm_i_vect}$$
 
 This process is repeated sequentially until we reach the end effector position, which is the position after the last arm segment.
 
 The rotation function `rotate_vector(vector, angle)` multiplies the vector by the rotation matrix to produce a new vector rotated by the specified angle:
-  $$\text{rotated\_vector} = R(\theta) \cdot \text{vector}$$
+  $${rotated_vector} = R(\theta) \cdot \text{vector}$$
 
 This approach correctly implements forward kinematics for a 4-link planar arm by accumulating rotations and positions from the base to the end effector.
 
