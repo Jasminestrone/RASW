@@ -71,7 +71,7 @@ Fourth joint rotates by $\theta_4$ = l1_angle + l2_angle + l3_angle + l4_angle
 
 Each joint position is calculated by adding the rotated vector to the previous joint:
 
- $$\{joint\_i\_pos} = \text{joint\_(i-1)\_pos} + R(\theta_{cum}) \cdot \text{arm\_i\_vect}$$
+$$\{joint\_i\_pos} = \{joint\_(i-1)\_pos} + R(\theta_{cum}) \cdot \{arm\_i\_vect}$$
 
 This process is repeated sequentially until we reach the end effector position, which is the position after the last arm segment.
 
