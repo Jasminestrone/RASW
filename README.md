@@ -1,5 +1,31 @@
+# RASW
+### Robotic Arm Software Package
 
-Math for 2D inverse kinematics
+| Description |
+
+## Installation
+
+<details>
+<summary><h2>If you don't have pip</h2></summary>
+
+<details>
+<summary>Windows</summary>
+
+```
+py -m ensurepip --default-pip
+```
+</details>
+<details>
+<summary>Mac/Linux</summary>
+
+```
+python3 -m ensurepip --default-pip
+```
+</details>
+</details>
+<details open>
+<summary><h1>Math</h1></summary>
+<h3>Math for 2D inverse kinematics</h3>
 
 The elbow angle is found using the law of cosines where we do
     $$\cos(\theta_2) = \frac{L_1^2 + L_2^2 - D^2}{2L_1L_2}$$
@@ -19,3 +45,8 @@ Finally we get theta1 by subtracting alpha from the target angle:
 
 We convert these angles from radians to degrees by doing:
     $$\theta_1^{\circ} = \theta_1 \cdot \frac{180}{\pi}$$ and $$\theta_2^{\circ} = \theta_2 \cdot \frac{180}{\pi}$$
+
+<h3>Math for 2D forward kinematics</h3>
+
+| Math |
+</details>
