@@ -6,23 +6,25 @@
 ## Installation
 
 <details>
-<summary><h2>If you don't have pip</h2></summary>
-
+<summary><h2>Installing pip (if needed)</h2></summary>
 <details>
 <summary>Windows</summary>
-
 ```
 py -m ensurepip --default-pip
 ```
 </details>
 <details>
 <summary>Mac/Linux</summary>
-
 ```
 python3 -m ensurepip --default-pip
 ```
 </details>
 </details>
+
+### <b>With pip installed</b>
+```
+pip install rasw
+```
 <details open>
 <summary><h1>Math</h1></summary>
 <h3>Math for 2D inverse kinematics</h3>
