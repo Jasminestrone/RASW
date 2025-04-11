@@ -2,16 +2,33 @@ import numpy as np
 from numpy import linalg as LA
 import math
 
-point_x = 5
-point_y = 2
-l1 = 160
-l2 = 160
-l3 = 160
-l4 = 5
-l1_angle = math.radians(40)
-l2_angle = math.radians(-35)
-l3_angle = math.radians(73)
-l4_angle = math.radians(20)
+# Fixed variables
+# l1 = 160
+# l2 = 160
+# l3 = 160
+# l4 = 5
+# l1_angle = math.radians(40)
+# l2_angle = math.radians(-35)
+# l3_angle = math.radians(73)
+# l4_angle = math.radians(20)
+
+# Inputed variables
+l1 = float(input("How long do you want your first arm to be?"))
+l2 = float(input("How long do you want your second arm to be?"))
+l3 = float(input("How long do you want your third arm to be?"))
+l4 = float(input("How long do you want your fourth arm to be?"))
+l1_angle = math.radians(
+    float(input("What do you want the angle of your first arm to be at?"))
+)
+l2_angle = math.radians(
+    float(input("What do you want the angle of your second arm to be at?"))
+)
+l3_angle = math.radians(
+    float(input("What do you want the angle of your third arm to be at?"))
+)
+l4_angle = math.radians(
+    float(input("What do you want the angle of your fourth arm to be at?"))
+)
 
 
 def rotate_vector(vector, angle):
