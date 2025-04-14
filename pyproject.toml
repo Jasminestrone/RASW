@@ -23,4 +23,5 @@ rasw-cli = "RASW.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/Jasminestrone/RASW"
+Documentation = "https://github.com/Jasminestrone/RASW"
 Issues = "https://google.com"

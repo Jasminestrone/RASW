@@ -30,6 +30,8 @@ python3 -m ensurepip --default-pip
 pip install rasw
 ```
 
+When you first import RASW after installation, it will automatically open the GitHub documentation page in your default web browser. If you want to disable this behavior, set the environment variable `RASW_NO_BROWSER=1` before importing the package.
+
 ## Usage
 
 ### Command-line Interface
