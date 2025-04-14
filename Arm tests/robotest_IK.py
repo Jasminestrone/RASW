@@ -14,8 +14,8 @@ l3 = 160
 offset = math.radians(10)
 a1_weight = 1
 
-point_x = 250
-point_y = 150
+point_x = 400
+point_y = 200
 
 
 def safe_arccos(x):
@@ -78,58 +78,68 @@ if target_angles is None:
 
 # Set up the animation
 fig, ax = plt.subplots(figsize=(10, 6))
-line, = ax.plot([], [], 'o-', linewidth=3, markersize=8, color='blue', label='Arm')
-target_point, = ax.plot([], [], 'rx', markersize=10, label='Target')
-ax.set_xlim(-500, 500)
-ax.set_ylim(-500, 500)
-ax.set_xlabel('X Position')
-ax.set_ylabel('Y Position')
-ax.set_title('3-Joint Arm Moving from Rest to Target')
-ax.legend()
-ax.grid(True)
-ax.set_aspect('equal', adjustable='box')
+ax.xaxis.set_tick_params(labelsize=10)
+ax.yaxis.set_tick_params(labelsize=10)
+(line,) = ax.plot([], [], "o-", linewidth=3, markersize=8, color="blue", label="Arm")
+(target_point,) = ax.plot([], [], "rx", markersize=10, label="Target")
+target_label = ax.text(
+    point_x + 10, point_y + 10, "(400, 200)", color="red", fontsize=12, visible=True
+)
+
+ax.set_xlim(0, 500)
+ax.set_ylim(0, 500)
+ax.set_xlabel("X Position")
+ax.set_ylabel("Y Position")
+ax.set_title("3-Joint Arm Moving from Rest to Target")
+ax.legend(fontsize=12)
+ax.set_aspect("equal", adjustable="box")
+
+# More grid lines
+tick_spacing = 50
+ax.set_xticks(np.arange(0, 501, tick_spacing))
+ax.set_yticks(np.arange(0, 501, tick_spacing))
+ax.minorticks_on()
+ax.grid(which="major", color="gray", linewidth=0.8)
+ax.grid(which="minor", color="lightgray", linestyle=":", linewidth=0.5)
 
 # Number of frames for the animation
 frames = 50
+
 
 def interpolate_angles(start_angles, end_angles, t):
     """Interpolate between start and end angles at position t (0 to 1)"""
     return [start + t * (end - start) for start, end in zip(start_angles, end_angles)]
 
+
 def init():
     line.set_data([], [])
     target_point.set_data([], [])
-    return line, target_point
+    target_label.set_visible(True)
+    return line, target_point, target_label
+
 
 def animate(i):
-    # Calculate the interpolation factor
     t = i / frames if i < frames else 1.0
-    
-    # Interpolate between rest and target angles
     current_angles = interpolate_angles(rest_angles, target_angles, t)
-    
-    # Calculate positions
     positions = forward_kinematics(current_angles, joint_lengths)
     x_vals, y_vals = zip(*positions)
-    
-    # Update the arm line
+
     line.set_data(x_vals, y_vals)
-    
-    # Update the target point (only visible in the second half of the animation)
+
     if t > 0.5:
         target_point.set_data([point_x], [point_y])
+        target_label.set_visible(True)
     else:
         target_point.set_data([], [])
-    
-    return line, target_point
+        target_label.set_visible(True)
+
+    return line, target_point, target_label
+
 
 # Create the animation
 ani = animation.FuncAnimation(
-    fig, animate, frames=frames+10,
-    init_func=init, blit=True, interval=50)
+    fig, animate, frames=frames + 10, init_func=init, blit=True, interval=50
+)
 
 plt.tight_layout()
 plt.show()
-
-# Optional: Save the animation
-# ani.save('arm_animation.gif', writer='pillow', fps=20)
