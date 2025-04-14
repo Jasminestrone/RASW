@@ -18,6 +18,9 @@ classifiers = [
 license = "GPL-3.0-only"
 license-files = ["LICEN[CS]E*"]
 
+[project.scripts]
+rasw-cli = "RASW.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/Jasminestrone/RASW"
 Issues = "https://google.com"

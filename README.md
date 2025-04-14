@@ -25,6 +25,55 @@ python3 -m ensurepip --default-pip
 ```
 pip install rasw
 ```
+
+## Usage
+
+### Command-line Interface
+
+After installation, you can use the `rasw-cli` command:
+
+```bash
+# Get help
+rasw-cli --help
+
+# Show version
+rasw-cli --version
+
+# Forward Kinematics
+rasw-cli fk --lengths 160 160 160 --angles 45 -30 60
+
+# Inverse Kinematics 
+rasw-cli ik --position 200 150 --lengths 160 160
+```
+
+### Python Library
+
+You can also use RASW directly in your Python code:
+
+```python
+from RASW import calculate_fk, calculate_ik
+
+# Forward Kinematics example
+arm_lengths = [160, 160, 160]  # Three arm segments
+joint_angles = [45, -30, 60]   # Joint angles in degrees
+joint_positions, error = calculate_fk(arm_lengths, joint_angles)
+
+if not error:
+    base_pos = joint_positions[0]
+    end_effector_pos = joint_positions[-1]
+    print(f"End effector at: ({end_effector_pos[0]:.2f}, {end_effector_pos[1]:.2f})")
+
+# Inverse Kinematics example
+target_x, target_y = 200, 150
+arm_lengths = [160, 160]  # Two arm segments
+joint_angles, error = calculate_ik(target_x, target_y, arm_lengths)
+
+if not error:
+    shoulder_angle = joint_angles[0]
+    elbow_angle = joint_angles[1]
+    print(f"Shoulder angle: {shoulder_angle:.2f}°, Elbow angle: {elbow_angle:.2f}°")
+```
+
 <details open>
 <summary><h1>Math</h1></summary>
 <h3>Math for 2D inverse kinematics</h3>
