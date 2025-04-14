@@ -9,15 +9,19 @@ RASW is a Python library for simulating and controlling robotic arms. It provide
 <summary><h2>Installing pip (if needed)</h2></summary>
 <details>
 <summary>Windows</summary>
+
 ```
 py -m ensurepip --default-pip
 ```
+
 </details>
 <details>
 <summary>Mac/Linux</summary>
+
 ```
 python3 -m ensurepip --default-pip
 ```
+
 </details>
 </details>
 
