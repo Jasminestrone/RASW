@@ -54,23 +54,6 @@ If you want to build from source:
    pip install dist/*.whl
    ```
 
-### Publishing to PyPI
-
-If you're a maintainer and want to publish to PyPI:
-
-1. Create a PyPI account at: https://pypi.org/account/register/
-2. Generate an API token at: https://pypi.org/manage/account/token/
-3. Create a `.pypirc` file in your home directory with:
-   ```
-   [pypi]
-   username = __token__
-   password = your-token-here
-   ```
-4. Run the build script with the upload flag:
-   ```bash
-   python build_package.py --upload
-   ```
-
 <details>
 <summary><h2>Installing pip (if needed)</h2></summary>
 <details>
@@ -144,6 +127,7 @@ if not error:
 <details open>
 <summary><h1>Math</h1></summary>
 <h3>Math for 2D inverse kinematics</h3>
+Inverse kinematics desmos - https://www.desmos.com/calculator/uyuilbk8go
 
 The elbow angle is found using the law of cosines where we do
     $$\cos(\theta_2) = \frac{L_1^2 + L_2^2 - D^2}{2L_1L_2}$$

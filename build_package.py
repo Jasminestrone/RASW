@@ -45,6 +45,7 @@ def main():
         print("\nWarning: No wheel file found in the dist directory.")
         print("The build process may have failed to create a wheel.")
         wheel_file = ""
+<<<<<<< HEAD
 
     # Check if we should upload to PyPI
     if len(sys.argv) > 1 and sys.argv[1] == "--upload":
@@ -69,6 +70,8 @@ def main():
 
     return 0
 
+=======
+>>>>>>> origin/main
 
 if __name__ == "__main__":
     sys.exit(main())
