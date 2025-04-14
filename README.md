@@ -127,7 +127,7 @@ if not error:
 <details open>
 <summary><h1>Math</h1></summary>
 <h3>Math for 2D inverse kinematics</h3>
-[Desmos](https://www.desmos.com/calculator/uyuilbk8go)
+Inverse kinematics desmos - https://www.desmos.com/calculator/uyuilbk8go
 
 The elbow angle is found using the law of cosines where we do
     $$\cos(\theta_2) = \frac{L_1^2 + L_2^2 - D^2}{2L_1L_2}$$
