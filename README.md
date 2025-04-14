@@ -1,7 +1,7 @@
 # RASW
 ### Robotic Arm Software Package
 
-| Description |
+RASW is a Python library for simulating and controlling robotic arms. It provides both forward and inverse kinematics calculations for 2D robotic arms with multiple segments. Use RASW for robotics education, prototyping, or controlling physical robotic arm systems. The library offers a simple API with comprehensive math documentation.
 
 ## Installation
 
