@@ -2,15 +2,6 @@ import numpy as np
 from numpy import linalg as LA
 import math
 
-# Fixed variables
-# l1 = 160
-# l2 = 160
-# l3 = 160
-# l4 = 5
-# l1_angle = math.radians(40)
-# l2_angle = math.radians(-35)
-# l3_angle = math.radians(73)
-# l4_angle = math.radians(20)
 
 # Inputed variables
 l1 = float(input("How long do you want your first arm to be?"))

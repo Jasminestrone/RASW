@@ -114,6 +114,7 @@ def interpolate_angles(start_angles, end_angles, t):
 def init():
     line.set_data([], [])
     target_point.set_data([], [])
+    target_point.set_visible(True)
     target_label.set_visible(True)
     return line, target_point, target_label
 
@@ -128,9 +129,11 @@ def animate(i):
 
     if t > 0.5:
         target_point.set_data([point_x], [point_y])
+        target_point.set_visible(True)
         target_label.set_visible(True)
     else:
         target_point.set_data([], [])
+        target_point.set_visible(True)
         target_label.set_visible(True)
 
     return line, target_point, target_label

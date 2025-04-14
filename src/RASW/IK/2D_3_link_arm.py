@@ -8,7 +8,7 @@ l3 = 160
 offset = math.radians(10)
 a1_weight = 1
 
-point_x = 250
+point_x = 200
 point_y = 150
 
 
