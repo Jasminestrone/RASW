@@ -45,30 +45,6 @@ def main():
         print("\nWarning: No wheel file found in the dist directory.")
         print("The build process may have failed to create a wheel.")
         wheel_file = ""
-    
-    # Check if we should upload to PyPI
-    if len(sys.argv) > 1 and sys.argv[1] == "--upload":
-        print("\nUploading to PyPI...")
-        # Use dist/* pattern but handle it platform-independently
-        dist_files = os.path.join("dist", "*")
-        upload_result = run_command(f"python -m twine upload {dist_files}")
-        if upload_result != 0:
-            print("Error uploading package")
-            return upload_result
-        
-        print("\nPackage successfully uploaded to PyPI!")
-        print("Users can now install it with: pip install rasw")
-    else:
-        print("\nPackage built successfully!")
-        print("Run with --upload flag to publish to PyPI")
-        if wheel_file:
-            print(f"Or test locally with: pip install {wheel_file}")
-        else:
-            print("Or test locally with: pip install dist/*.whl (Linux/Mac)")
-            print("Or test locally with: pip install path\\to\\wheelfile.whl (Windows)")
-    
-    return 0
-
 
 if __name__ == "__main__":
     sys.exit(main()) 
