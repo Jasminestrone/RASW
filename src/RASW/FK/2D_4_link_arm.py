@@ -55,6 +55,8 @@ joint_2_pos = joint_1_pos + arm_1_rotated
 arm_2_rotated = rotate_vector(arm_2_vect, l1_angle + l2_angle)
 joint_3_pos = joint_2_pos + arm_2_rotated
 
+# make this a reverse step function so I can import how many arm lengths
+
 # Rotate third arm
 arm_3_rotated = rotate_vector(arm_3_vect, l1_angle + l2_angle + l3_angle)
 joint_4_pos = joint_3_pos + arm_3_rotated
