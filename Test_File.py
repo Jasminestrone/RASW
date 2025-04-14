@@ -1,10 +1,5 @@
 from RASW import calculate_fk, calculate_ik
-import RASW
 
-print(f"RASW module loaded from: {RASW.__file__}")
-import inspect
-
-print(f"calculate_ik function source: {inspect.getsource(calculate_ik)}")
 
 # Forward Kinematics example
 arm_lengths = [160, 160, 160, 160]  # Four arm segments
