@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import seaborn as sns
+import matplotlib.animation as animation
 
 sns.set_theme(style="darkgrid")
 
@@ -65,25 +66,70 @@ def forward_kinematics(joint_angles, joint_lengths):
     return positions
 
 
-# Compute joint angles
-angles = arm_math(point_x, point_y, offset)
-if angles:
-    joint_lengths = [l1, l2, l3]
-    positions = forward_kinematics(angles, joint_lengths)
+# Define the rest position (arm straight along x-axis)
+rest_angles = [0, 0, 0]
+joint_lengths = [l1, l2, l3]
 
-    # Extract x and y for plotting
+# Compute target joint angles
+target_angles = arm_math(point_x, point_y, offset)
+if target_angles is None:
+    print("Cannot reach target point. Exiting.")
+    exit()
+
+# Set up the animation
+fig, ax = plt.subplots(figsize=(10, 6))
+line, = ax.plot([], [], 'o-', linewidth=3, markersize=8, color='blue', label='Arm')
+target_point, = ax.plot([], [], 'rx', markersize=10, label='Target')
+ax.set_xlim(-500, 500)
+ax.set_ylim(-500, 500)
+ax.set_xlabel('X Position')
+ax.set_ylabel('Y Position')
+ax.set_title('3-Joint Arm Moving from Rest to Target')
+ax.legend()
+ax.grid(True)
+ax.set_aspect('equal', adjustable='box')
+
+# Number of frames for the animation
+frames = 50
+
+def interpolate_angles(start_angles, end_angles, t):
+    """Interpolate between start and end angles at position t (0 to 1)"""
+    return [start + t * (end - start) for start, end in zip(start_angles, end_angles)]
+
+def init():
+    line.set_data([], [])
+    target_point.set_data([], [])
+    return line, target_point
+
+def animate(i):
+    # Calculate the interpolation factor
+    t = i / frames if i < frames else 1.0
+    
+    # Interpolate between rest and target angles
+    current_angles = interpolate_angles(rest_angles, target_angles, t)
+    
+    # Calculate positions
+    positions = forward_kinematics(current_angles, joint_lengths)
     x_vals, y_vals = zip(*positions)
+    
+    # Update the arm line
+    line.set_data(x_vals, y_vals)
+    
+    # Update the target point (only visible in the second half of the animation)
+    if t > 0.5:
+        target_point.set_data([point_x], [point_y])
+    else:
+        target_point.set_data([], [])
+    
+    return line, target_point
 
-    # Plotting
-    plt.figure(figsize=(10, 6))
-    plt.plot(x_vals, y_vals, "o-", linewidth=3, markersize=8, color="blue", label="Arm")
-    plt.plot(point_x, point_y, "rx", markersize=10, label="Target")
-    plt.xlim(-500, 500)
-    plt.ylim(-500, 500)
-    plt.xlabel("X Position")
-    plt.ylabel("Y Position")
-    plt.title("3-Joint Arm Reaching for Target Point")
-    plt.legend()
-    plt.grid(True)
-    plt.gca().set_aspect("equal", adjustable="box")
-    plt.show()
+# Create the animation
+ani = animation.FuncAnimation(
+    fig, animate, frames=frames+10,
+    init_func=init, blit=True, interval=50)
+
+plt.tight_layout()
+plt.show()
+
+# Optional: Save the animation
+# ani.save('arm_animation.gif', writer='pillow', fps=20)
