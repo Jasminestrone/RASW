@@ -5,6 +5,72 @@ RASW is a Python library for simulating and controlling robotic arms. It provide
 
 ## Installation
 
+RASW can be easily installed via pip:
+
+```bash
+pip install rasw
+```
+
+That's it! After installation, you can use the CLI tool with:
+
+```bash
+rasw-cli --help
+```
+
+Or import the package in your Python code:
+
+```python
+from RASW import calculate_fk, calculate_ik
+
+# Example usage
+joint_positions, _ = calculate_fk([10, 10], [45, 45])
+```
+
+### Building from source
+
+If you want to build from source:
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/Jasminestrone/RASW.git
+   cd RASW
+   ```
+
+2. Run the build script
+   ```bash
+   # On Windows
+   python build_package.py
+   
+   # On Mac/Linux
+   python3 build_package.py
+   ```
+
+3. Install locally (the script will show the exact path to use)
+   ```bash
+   # On Windows
+   pip install dist\your_wheel_file.whl
+   
+   # On Mac/Linux
+   pip install dist/*.whl
+   ```
+
+### Publishing to PyPI
+
+If you're a maintainer and want to publish to PyPI:
+
+1. Create a PyPI account at: https://pypi.org/account/register/
+2. Generate an API token at: https://pypi.org/manage/account/token/
+3. Create a `.pypirc` file in your home directory with:
+   ```
+   [pypi]
+   username = __token__
+   password = your-token-here
+   ```
+4. Run the build script with the upload flag:
+   ```bash
+   python build_package.py --upload
+   ```
+
 <details>
 <summary><h2>Installing pip (if needed)</h2></summary>
 <details>
@@ -24,11 +90,6 @@ python3 -m ensurepip --default-pip
 
 </details>
 </details>
-
-### <b>With pip installed</b>
-```
-pip install rasw
-```
 
 When you first import RASW after installation, it will automatically open the GitHub documentation page in your default web browser. If you want to disable this behavior, set the environment variable `RASW_NO_BROWSER=1` before importing the package.
 

@@ -10,10 +10,14 @@ authors = [
 ]
 description = "A small robotic arm software package :)"
 readme = "README.md"
-requires-python = ">=13.3"
+requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy",
+    "matplotlib",
 ]
 license = "GPL-3.0-only"
 license-files = ["LICEN[CS]E*"]
