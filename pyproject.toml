@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "RASW"
-version = "0.1.0"
+version = "1.0.0"
 authors = [
   { name="Jazz, Nico, Patrick , Lloyd", email="prt271828@example.com" },
 ]
