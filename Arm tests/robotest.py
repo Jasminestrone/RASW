@@ -1,19 +1,98 @@
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-import matplotlib.animation as animation
 import numpy as np
+import math
 import seaborn as sns
+import matplotlib.animation as animation
+from matplotlib.gridspec import GridSpec
+
+# Set the visual theme
 sns.set_theme(style="darkgrid")
 
-def create_time_series(start, end, step):
-    """Generate a time series for the animation."""
-    return np.arange(start, end + step, step)
+# Common arm parameters
+l1 = 160
+l2 = 160
+l3 = 160
+l4 = 160  # Only used for 4-joint arm
 
-def forward_kinematics(joint_angles, joint_lengths):
-    """Calculate the positions of all joints using forward kinematics."""
+# Target point for 3-joint arm
+point_x_3 = 400
+point_y_3 = 200
+
+# Target point for 4-joint arm (calculated from the joint angles)
+a1_deg = 45
+a2_deg = -30
+a3_deg = 45
+a4_deg = -20
+
+# Convert degrees to radians for 4-joint arm
+a1 = np.radians(a1_deg)
+a2 = np.radians(a2_deg)
+a3 = np.radians(a3_deg)
+a4 = np.radians(a4_deg)
+
+# 4-joint arm angles and lengths
+joint_angles_4 = [a1, a2, a3, a4]
+joint_lengths_4 = [l1, l2, l3, l4]
+
+
+# Calculate the endpoint of the 4-joint arm to use as its target
+def calc_endpoint(angles, lengths):
     x, y = 0, 0
     cumulative_angle = 0
-    positions = []
+    for angle, length in zip(angles, lengths):
+        cumulative_angle += angle
+        x += length * np.cos(cumulative_angle)
+        y += length * np.sin(cumulative_angle)
+    return x, y
+
+
+point_x_4, point_y_4 = calc_endpoint(joint_angles_4, joint_lengths_4)
+
+# 3-joint arm parameters
+offset = math.radians(10)
+a1_weight = 1
+joint_lengths_3 = [l1, l2, l3]
+
+
+# Helper functions for 3-joint arm
+def safe_arccos(x):
+    return np.arccos(np.clip(x, -1.0, 1.0))
+
+
+def safe_arcsin(x):
+    return np.arcsin(np.clip(x, -1.0, 1.0))
+
+
+def arm_math(point_x, point_y, offset):
+    total_arm_length = l1 + l2 + l3
+    distance_to_point = np.sqrt(point_x**2 + point_y**2)
+
+    if distance_to_point > total_arm_length:
+        print("Target point is unreachable.")
+        return None
+
+    angle1 = a1_weight * np.arctan2(point_y, point_x) + offset
+    p2_x = np.cos(angle1) * l1
+    p2_y = np.sin(angle1) * l1
+
+    h = np.sqrt((point_x - p2_x) ** 2 + (point_y - p2_y) ** 2)
+    b = point_y
+    d = p2_y
+
+    angle2 = -angle1 + (
+        safe_arccos((l3**2 - l2**2 - h**2) / (-2 * l2 * h)) + safe_arcsin((b - d) / h)
+    )
+
+    angle3 = -np.pi + safe_arccos((h**2 - l2**2 - l3**2) / (-2 * l2 * l3))
+
+    return angle1, angle2, angle3
+
+
+# Common forward kinematics function
+def forward_kinematics(joint_angles, joint_lengths):
+    x, y = 0, 0
+    cumulative_angle = 0
+    positions = [(x, y)]
 
     for angle, length in zip(joint_angles, joint_lengths):
         cumulative_angle += angle
@@ -23,74 +102,161 @@ def forward_kinematics(joint_angles, joint_lengths):
 
     return positions
 
-def setup_plot():
-    """Set up the matplotlib plot for the animation."""
-    fig = plt.figure(figsize=(16, 9), dpi=80, facecolor=(0.8, 0.8, 0.8))
-    gs = gridspec.GridSpec(3, 3)
-    plt.subplots_adjust(left=0.03, bottom=0.035, right=0.99, top=0.97, wspace=0.15, hspace=0.2)
-    return fig, gs
 
-def initialize_subplots(fig, gs):
-    """Initialize subplots for the animation."""
-    ax1 = fig.add_subplot(gs[:, 0:2], facecolor=(0.9, 0.9, 0.9))
-    ax1.plot([0, 0], [0, 0.4], 'k', linewidth=20, alpha=0.5)  # base line
-    return ax1
+# Compute target joint angles for 3-joint arm
+target_angles_3 = arm_math(point_x_3, point_y_3, offset)
+if target_angles_3 is None:
+    print("Cannot reach target point. Exiting.")
+    exit()
 
-def setup_animation_axes(ax1):
-    """Set up axes and lines for the main animation plot."""
-    ax1.set_xlim(-20, 20)
-    ax1.set_ylim(-20, 20)
-    ax1.set_xlabel('meters [m]', fontsize=12)
-    ax1.set_ylabel('meters [m]', fontsize=12)
-    ax1.grid(True)
+# Define the rest positions
+rest_angles_3 = [0, 0, 0]
+rest_angles_4 = [0, 0, 0, 0]
 
-    joint_lines = [ax1.plot([], [], 'o-', linewidth=2, markersize=4)[0] for _ in range(3)]
-    trajectory_line, = ax1.plot([], [], 'b--', linewidth=1.5)  # Distinct trajectory style
+# Set up the animation with stacked subplots
+fig = plt.figure(figsize=(10, 12))
+gs = GridSpec(2, 1, figure=fig, height_ratios=[1, 1])
+ax1 = fig.add_subplot(gs[0, 0])  # 3-joint arm (top)
+ax2 = fig.add_subplot(gs[1, 0])  # 4-joint arm (bottom)
 
-    return joint_lines, trajectory_line
+# Configure 3-joint arm plot
+(line1,) = ax1.plot(
+    [], [], "o-", linewidth=3, markersize=8, color="blue", label="3-Joint Arm"
+)
+(target_point1,) = ax1.plot([], [], "rx", markersize=10, label="Target")
+target_label1 = ax1.text(
+    point_x_3 + 10,
+    point_y_3 + 10,
+    f"({int(point_x_3)}, {int(point_y_3)})",
+    color="red",
+    fontsize=12,
+    visible=False,
+)
+end_effector_text1 = ax1.text(0, 0, "", color="blue", fontsize=12, visible=False)
 
-def animate_with_sine_wave(frame, joint_angles, joint_lengths, joint_lines, trajectory_line, time_series):
-    """Update function for the animation with sine wave trajectory."""
-    end_effector_positions = []
+# Configure 4-joint arm plot
+(line2,) = ax2.plot(
+    [], [], "o-", linewidth=3, markersize=8, color="green", label="4-Joint Arm"
+)
+(target_point2,) = ax2.plot([], [], "rx", markersize=10, label="Target")
+target_label2 = ax2.text(
+    point_x_4 + 10,
+    point_y_4 + 10,
+    f"({int(point_x_4)}, {int(point_y_4)})",
+    color="red",
+    fontsize=12,
+    visible=False,
+)
+end_effector_text2 = ax2.text(0, 0, "", color="green", fontsize=12, visible=False)
 
-    for i in range(frame):
-        angles = [joint_angle[i] for joint_angle in joint_angles]
-        positions = forward_kinematics(angles, joint_lengths)
-        end_effector_positions.append(positions[-1])  # Append only the end effector position
+# Configure axes with identical settings for better comparison
+for ax in [ax1, ax2]:
+    ax.set_xlim(0, 701)
+    ax.set_ylim(0, 451)
+    ax.set_xlabel("X Position")
+    ax.set_ylabel("Y Position")
+    ax.set_aspect("equal", adjustable="box")
 
-        for j in range(len(joint_lines)):
-            if j == 0:
-                joint_lines[j].set_data([0, positions[j][0]], [0, positions[j][1]])
-            else:
-                joint_lines[j].set_data([positions[j-1][0], positions[j][0]], 
-                                        [positions[j-1][1], positions[j][1]])
+    # Add grid lines
+    tick_spacing = 50
+    ax.set_xticks(np.arange(0, 701, tick_spacing))
+    ax.set_yticks(np.arange(0, 451, tick_spacing))
+    ax.minorticks_on()
+    ax.grid(which="major", color="gray", linewidth=0.8)
+    ax.grid(which="minor", color="lightgray", linestyle=":", linewidth=0.5)
+    ax.legend(fontsize=12, loc="upper left")
 
-    if end_effector_positions:
-        trajectory_x, trajectory_y = zip(*end_effector_positions)
-        trajectory_line.set_data(trajectory_x, trajectory_y)
+ax1.set_title("3-Joint Arm Moving to Target")
+ax2.set_title("4-Joint Arm Movement")
 
-    return joint_lines + [trajectory_line]
+# Number of frames for the animation
+frames = 60
 
 
-def main():
-    t0, t_end, dt = 0, 30, 0.005  # Extended time range for a clearer sine wave
-    time_series = create_time_series(t0, t_end, dt)
-    joint_lengths = [5, 3, 5]
+def interpolate_angles(start_angles, end_angles, t):
+    """Interpolate between start and end angles at position t (0 to 1)"""
+    return [start + t * (end - start) for start, end in zip(start_angles, end_angles)]
 
-    # Sine wave motion for end effector
-    sine_wave_amplitude = 3
-    sine_wave_frequency = 0.5
-    joint_angles = [np.pi/2 * np.sin(2 * np.pi * sine_wave_frequency * time_series) for _ in range(3)]
 
-    fig, gs = setup_plot()
-    ax1 = initialize_subplots(fig, gs)
-    joint_lines, trajectory_line = setup_animation_axes(ax1)
+def init():
+    line1.set_data([], [])
+    target_point1.set_data([], [])
+    end_effector_text1.set_text("")
 
-    ani = animation.FuncAnimation(fig, animate_with_sine_wave, len(time_series), 
-                                  fargs=(joint_angles, joint_lengths, joint_lines, trajectory_line, time_series), 
-                                  interval=20, blit=True)
+    line2.set_data([], [])
+    target_point2.set_data([], [])
+    end_effector_text2.set_text("")
 
-    plt.show()
+    return (
+        line1,
+        target_point1,
+        target_label1,
+        end_effector_text1,
+        line2,
+        target_point2,
+        target_label2,
+        end_effector_text2,
+    )
 
-if __name__ == "__main__":
-    main()
+
+def animate(i):
+    t = i / frames if i < frames else 1.0
+
+    # Update 3-joint arm
+    current_angles_3 = interpolate_angles(rest_angles_3, target_angles_3, t)
+    positions_3 = forward_kinematics(current_angles_3, joint_lengths_3)
+    x_vals_3, y_vals_3 = zip(*positions_3)
+    line1.set_data(x_vals_3, y_vals_3)
+
+    # Show target and update end effector position for 3-joint arm
+    target_point1.set_data([point_x_3], [point_y_3])
+    target_label1.set_visible(True)
+
+    end_x_3, end_y_3 = x_vals_3[-1], y_vals_3[-1]
+    end_effector_text1.set_position((end_x_3 + 10, end_y_3 - 20))
+    end_effector_text1.set_text(f"End: ({int(end_x_3)}, {int(end_y_3)})")
+    end_effector_text1.set_visible(True)
+
+    # Update 4-joint arm
+    current_angles_4 = interpolate_angles(rest_angles_4, joint_angles_4, t)
+    positions_4 = forward_kinematics(current_angles_4, joint_lengths_4)
+    x_vals_4, y_vals_4 = zip(*positions_4)
+    line2.set_data(x_vals_4, y_vals_4)
+
+    # Show target and update end effector position for 4-joint arm
+    target_point2.set_data([point_x_4], [point_y_4])
+    target_label2.set_visible(True)
+
+    end_x_4, end_y_4 = x_vals_4[-1], y_vals_4[-1]
+    end_effector_text2.set_position((end_x_4 + 10, end_y_4 - 20))
+    end_effector_text2.set_text(f"End: ({int(end_x_4)}, {int(end_y_4)})")
+    end_effector_text2.set_visible(True)
+
+    return (
+        line1,
+        target_point1,
+        target_label1,
+        end_effector_text1,
+        line2,
+        target_point2,
+        target_label2,
+        end_effector_text2,
+    )
+
+
+# Create the animation
+ani = animation.FuncAnimation(
+    fig, animate, frames=frames + 10, init_func=init, blit=True, interval=50
+)
+
+# Set up figure for better viewing
+plt.tight_layout()
+
+# Save the animation as a GIF file
+gif_filename = "arm_animation.gif"
+print(f"Saving animation to {gif_filename}...")
+ani.save(gif_filename, writer="pillow", fps=20, dpi=100)
+print(f"Animation saved as {gif_filename}")
+
+# Display the animation in the notebook/interactive environment
+plt.show()
