@@ -1,5 +1,5 @@
 # RASW
-![Python](https://img.shields.io/badge/Python-grey?style=for-the-badge&logo=python)
+![static](https://img.shields.io/badge/Python-grey?style=for-the-badge&logo=python)
 
 ### Robotic Arm Software Package
 
