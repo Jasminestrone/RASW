@@ -16,7 +16,7 @@ from pathlib import Path
 
 def _open_docs_on_first_run():
     """Open documentation website on first run after installation."""
-    first_run_marker = Path.home() / ".rasw_first_run"
+    first_run_marker = Path(os.environ.get('XDG_DATA_HOME', Path.home())) / ".rasw_first_run"
     if not first_run_marker.exists():
         try:
             # Create the marker file to prevent opening on subsequent imports
