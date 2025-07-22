@@ -1,6 +1,6 @@
 """RASW - Robotic Arm Software Package."""
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 # Import main functionality
 from RASW.FK import calculate_fk

@@ -31,10 +31,19 @@ def main():
     run_command("pip install --upgrade build twine")
 
     # Build package
-    build_result = run_command("python3 -m build")
-    if build_result != 0:
-        print("Error building package")
-        return build_result
+    user_input = input('Would you like to use Python3 (alternative is python) \n y/n: ')
+    if user_input.lower() == 'y':
+        build_result = run_command("python3 -m build")
+        if build_result != 0:
+            print("Error building package")
+            return build_result
+    elif user_input.lower() == 'n':
+        build_result = run_command("python -m build")
+        if build_result != 0:
+            print("Error building package")
+            return build_result
+
+
 
     # Find the wheel file
     wheel_files = glob.glob(os.path.join("dist", "*.whl"))
