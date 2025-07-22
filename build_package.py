@@ -35,12 +35,12 @@ def main():
     if user_input.lower() == 'y':
         build_result = run_command("python3 -m build")
         if build_result != 0:
-            print("Error building package")
+            print("Error building package, try using python")
             return build_result
     elif user_input.lower() == 'n':
         build_result = run_command("python -m build")
         if build_result != 0:
-            print("Error building package")
+            print("Error building package, try using Python3")
             return build_result
 
 
